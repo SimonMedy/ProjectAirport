@@ -1,18 +1,11 @@
-# src/database.py
 import os
 import pandas as pd
 from sqlalchemy import create_engine
 from dotenv import load_dotenv, find_dotenv
 
-# On importe les fonctions de chargement que nous avons déjà créées
 from src.data_loader import charger_aeroports, charger_vols, charger_compagnies, charger_avions
 
 def get_db_engine():
-    """
-    Crée et retourne un moteur de connexion à la base de données
-    en lisant l'URL depuis le fichier .env.local.
-    """
-    # Charger les variables d'environnement en cherchant le fichier .env.local
     load_dotenv(find_dotenv('.env.local'))
     
     db_url = os.getenv("DB_CONNECTION_STRING")
@@ -23,10 +16,10 @@ def get_db_engine():
         
     try:
         engine = create_engine(db_url)
-        print("✅ Connexion à la base de données Supabase réussie.")
+        print("Connexion à la base de données Supabase réussie.")
         return engine
     except Exception as e:
-        print(f"❌ Erreur de connexion à la base de données : {e}")
+        print(f"Erreur de connexion à la base de données : {e}")
         return None
 
 def populate_database():

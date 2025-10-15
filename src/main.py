@@ -38,7 +38,7 @@ def run_database_mission():
     
 
 if __name__ == "__main__":
-    #run_database_mission()
+    run_database_mission()
     
     print("\n" + "="*50 + "\n")
     run_analysis_mission()
