@@ -55,7 +55,7 @@ def analyse_par_compagnie(df_vols, df_compagnies):
         print("Données manquantes pour l'analyse par compagnie.")
         return
 
-    print("\n--- 7. Nombre de destinations desservies par compagnie ---")
+    print("\n--- 3. Nombre de destinations desservies par compagnie ---")
     
     # Grouper par 'carrier' et compter les destinations uniques pour chaque
     dest_par_compagnie = df_vols.groupby('carrier')['dest'].nunique().sort_values(ascending=False)
@@ -70,11 +70,57 @@ def analyse_par_compagnie(df_vols, df_compagnies):
     print(df_dest_par_compagnie[['name', 'nombre_destinations_uniques']].to_string(index=False))
     print("-" * 40)
 
-    print("\n--- 8. Destinations par compagnie et par aéroport d'origine (Top 15) ---")
+    print("\n--- Destinations par compagnie et par aéroport d'origine (Top 15) ---")
     # Double groupement : par compagnie ET par aéroport d'origine
     dest_par_origine = df_vols.groupby(['carrier', 'origin'])['dest'].nunique().sort_values(ascending=False)
     print(dest_par_origine.head(15))
     print("-" * 40)
+    
+def analyses_filtrage_et_tri(df_vols, df_aeroports, df_compagnies):
+    """
+    Répond aux questions 4 et 5 : Filtrage de vols spécifiques et tri.
+    """
+    if df_vols is None:
+        print("Données de vols manquantes pour le filtrage et le tri.")
+        return
+
+    print("\n--- 4. Vols à destination de Houston (IAH ou HOU) ---")
+    vols_houston = df_vols[df_vols['dest'].isin(['IAH', 'HOU'])]
+    print(f"Nombre de vols trouvés pour Houston : {len(vols_houston)}")
+    print(vols_houston.head().to_string())
+    print("-" * 40)
+
+    print("\n--- 10. Analyse des vols de NYC vers Seattle (SEA) ---")
+    vols_nyc_sea = df_vols[
+        (df_vols['origin'].isin(['EWR', 'JFK', 'LGA'])) &
+        (df_vols['dest'] == 'SEA')
+    ]
+    
+    nombre_vols = len(vols_nyc_sea)
+    compagnies_uniques = vols_nyc_sea['carrier'].nunique()
+    avions_uniques = vols_nyc_sea['tailnum'].nunique()
+    
+    print(f"Nombre de vols de NYC vers Seattle : {nombre_vols}")
+    print(f"Nombre de compagnies desservant cette destination : {compagnies_uniques}")
+    print(f"Nombre d'avions uniques sur cette route : {avions_uniques}")
+    print("-" * 40)
+    
+    if df_aeroports is not None and df_compagnies is not None:
+        print("\n--- 11. Aperçu des vols triés (Destination, Origine, Compagnie) ---")
+        
+        df_tries = pd.merge(df_vols, df_aeroports, left_on='origin', right_on='faa', suffixes=('', '_origin'))
+        df_tries.rename(columns={'name': 'origin_name'}, inplace=True)
+        
+        df_tries = pd.merge(df_tries, df_aeroports, left_on='dest', right_on='faa', suffixes=('', '_dest'))
+        df_tries.rename(columns={'name': 'dest_name'}, inplace=True)
+        
+        df_tries = pd.merge(df_tries, df_compagnies, on='carrier')
+        
+        df_tries.sort_values(by=['dest_name', 'origin_name', 'name'], inplace=True)
+        
+        colonnes_a_afficher = ['dest_name', 'origin_name', 'name', 'flight', 'tailnum']
+        print(df_tries[colonnes_a_afficher].head(10).to_string(index=False))
+        print("-" * 40)
 
 
 # ================================================================= #
@@ -106,18 +152,18 @@ def analyses_classements(df_vols, df_aeroports):
         df_merged['pourcentage'] = (df_merged['nombre_vols'] / total_vols) * 100
         df_merged['pourcentage'] = df_merged['pourcentage'].map('{:.2f}%'.format)
 
-        print("\n--- 3. Top 10 des destinations les plus prisées ---")
+        print("\n--- Top 10 des destinations les plus prisées ---")
         print(df_merged[['name', 'nombre_vols', 'pourcentage']].head(10).to_string(index=False))
         
-        print("\n--- 4. Top 10 des destinations les moins prisées ---")
+        print("\n--- Top 10 des destinations les moins prisées ---")
         print(df_merged[['name', 'nombre_vols', 'pourcentage']].tail(10).to_string(index=False))
         print("-" * 40)
 
     # --- Top 10 des avions ---
     avion_counts = df_vols['tailnum'].value_counts()
-    print("\n--- 5. Top 10 des avions ayant le plus décollé ---")
+    print("\n--- Top 10 des avions ayant le plus décollé ---")
     print(avion_counts.head(10))
     
-    print("\n--- 6. Top 10 des avions ayant le moins décollé ---")
+    print("\n--- Top 10 des avions ayant le moins décollé ---")
     print(avion_counts.tail(10))
     print("-" * 40)

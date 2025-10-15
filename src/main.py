@@ -1,5 +1,5 @@
 from src.data_loader import charger_aeroports, charger_vols, charger_compagnies, charger_avions
-from src.analysis import analyses_comptages_simples, analyses_classements, analyses_comptages_suite, analyse_par_compagnie
+from src.analysis import analyses_comptages_simples, analyses_classements, analyses_comptages_suite, analyse_par_compagnie, analyses_filtrage_et_tri
 
 def main():
     """Fonction principale du programme."""
@@ -14,10 +14,11 @@ def main():
     print("\n--- Début de l'analyse ---")
 
     # Étape 2 : Analyses
-    analyses_comptages_simples(df_aeroports, df_compagnies, df_avions, df_vols)
-    analyses_comptages_suite(df_vols, df_aeroports)
-    analyses_classements(df_vols, df_aeroports)
+    #analyses_comptages_simples(df_aeroports, df_compagnies, df_avions, df_vols)
+    #analyses_comptages_suite(df_vols, df_aeroports)
+    #analyses_classements(df_vols, df_aeroports)
     analyse_par_compagnie(df_vols, df_compagnies)
+    
 
 if __name__ == "__main__":
     main()
