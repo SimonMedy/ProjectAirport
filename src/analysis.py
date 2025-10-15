@@ -1,15 +1,7 @@
-# src/analysis.py
 import pandas as pd
 
-# ================================================================= #
-#                         QUESTIONS DE COMPTAGE                       #
-# ================================================================= #
-
 def analyses_comptages_simples(df_aeroports, df_compagnies, df_avions, df_vols):
-    """
-    Répond à la première série de questions : comptages de base.
-    """
-    print("--- 1. Statistiques de base ---")
+    print("1. Statistiques de base")
     
     if df_aeroports is not None:
         print(f"Nombre total d'aéroports : {len(df_aeroports)}")
@@ -28,10 +20,7 @@ def analyses_comptages_simples(df_aeroports, df_compagnies, df_avions, df_vols):
 
 
 def analyses_comptages_suite(df_vols, df_aeroports):
-    """
-    Répond aux autres questions de comptage de la question 1.
-    """
-    print("\n--- 1. (Suite) Statistiques de base ---")
+    print("1. (Suite) Statistiques de base")
     
     if df_vols is not None:
         departs_uniques = df_vols['origin'].nunique()
@@ -48,14 +37,11 @@ def analyses_comptages_suite(df_vols, df_aeroports):
     print("-" * 40)
     
 def analyse_par_compagnie(df_vols, df_compagnies):
-    """
-    Répond à la question 3 : Analyse par compagnie.
-    """
     if df_vols is None or df_compagnies is None:
         print("Données manquantes pour l'analyse par compagnie.")
         return
 
-    print("\n--- 3. Nombre de destinations desservies par compagnie ---")
+    print("3. Nombre de destinations desservies par compagnie")
     
     # Grouper par 'carrier' et compter les destinations uniques pour chaque
     dest_par_compagnie = df_vols.groupby('carrier')['dest'].nunique().sort_values(ascending=False)
@@ -70,8 +56,7 @@ def analyse_par_compagnie(df_vols, df_compagnies):
     print(df_dest_par_compagnie[['name', 'nombre_destinations_uniques']].to_string(index=False))
     print("-" * 40)
 
-    # --- GRAPHIQUE 1 : Graphique en barres ASCII des destinations par compagnie ---
-    print("\n--- GRAPHIQUE 1 : Destinations par compagnie (Top 10) ---")
+    print("GRAPHIQUE 1 : Destinations par compagnie (Top 10)")
     top_10_compagnies = df_dest_par_compagnie.head(10)
     max_destinations = top_10_compagnies['nombre_destinations_uniques'].max()
     
@@ -83,16 +68,14 @@ def analyse_par_compagnie(df_vols, df_compagnies):
         print(f"{nom} |{barre} {nb_dest}")
     print("-" * 40)
 
-    print("\n--- Destinations par compagnie et par aéroport d'origine (Top 15) ---")
-    # Double groupement : par compagnie ET par aéroport d'origine
+    print("Destinations par compagnie et par aéroport d'origine (Top 15)")
     dest_par_origine = df_vols.groupby(['carrier', 'origin'])['dest'].nunique().reset_index()
     dest_par_origine = pd.merge(dest_par_origine, df_compagnies, on='carrier')
     dest_par_origine = dest_par_origine.sort_values('dest', ascending=False)
     print(dest_par_origine.head(15))
     print("-" * 40)
 
-    # --- GRAPHIQUE 2 : Top 15 des combinaisons compagnie-aéroport ---
-    print("\n--- GRAPHIQUE 2 : Top 15 Compagnie-Aéroport ---")
+    print("GRAPHIQUE 2 : Top 15 Compagnie-Aéroport")
     top_15 = dest_par_origine.head(15)
     max_dest_origine = top_15['dest'].max()
     
@@ -332,11 +315,6 @@ def vols_principales_compagnies(df_vols, df_compagnies):
         print("Aucune des compagnies principales trouvée dans les données.")
     
     print("-" * 40)
-
-
-# ================================================================= #
-#                        QUESTIONS DE CLASSEMENT                      #
-# ================================================================= #
 
 def analyses_classements(df_vols, df_aeroports):
     """
