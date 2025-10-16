@@ -11,7 +11,7 @@ def run_analysis_mission():
     """
     print("--- Lancement de la Mission 1 : Analyse des Données ---\n")
 
-    # Étape 1 : Chargement des données
+    
     df_aeroports = charger_aeroports()
     df_vols = charger_vols()
     df_compagnies = charger_compagnies()
@@ -20,7 +20,7 @@ def run_analysis_mission():
 
     print("\n--- Début de l'analyse ---")
 
-    # Étape 2 : Analyses
+    
     analyses_comptages_simples(df_aeroports, df_compagnies, df_avions, df_vols) #Q1
     analyses_comptages_suite(df_vols, df_aeroports) #Q1
     analyses_classements(df_vols, df_aeroports) #Q2
