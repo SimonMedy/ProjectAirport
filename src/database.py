@@ -30,17 +30,15 @@ def populate_database():
     if engine is None:
         return
 
-    # --- Étape 1 : Charger toutes les données depuis les fichiers ---
     print("\n--- Chargement des données depuis les fichiers source ---")
     df_aeroports = charger_aeroports()
     df_vols = charger_vols()
     df_compagnies = charger_compagnies()
     df_avions = charger_avions()
     
-    # --- Étape 2 : Préparer et nettoyer les données (CRUCIAL) ---
     print("\n--- Préparation et nettoyage des données ---")
 
-    # Problème 1: Ajouter les 4 aéroports manquants mentionnés dans l'énoncé
+    # Ajout des 4 aéroports manquants
     aeroports_manquants = pd.DataFrame({
         'faa': ['BQN', 'PSE', 'SJU', 'STT'],
         'name': ['Rafael Hernandez Airport', 'Mercedita Airport', 'Luis Munoz Marin Intl', 'Cyril E. King Airport'],
@@ -54,14 +52,13 @@ def populate_database():
     df_aeroports = pd.concat([df_aeroports, aeroports_manquants], ignore_index=True)
     print("✅ 4 aéroports manquants ajoutés avec succès.")
     
-    # Problème 2: Gérer les types de données avant insertion
+    # Gérer les types de données avant insertion
     df_avions['year'] = df_avions['year'].astype('Int64')
     print("✅ Types de données corrigés.")
 
-    # --- Étape 3 : Insérer les données dans Supabase (dans le bon ordre) ---
+    # Insertion des données dans Supabase
     print("\n--- Démarrage de l'insertion des données dans Supabase ---")
     try:
-        # L'ordre est important à cause des clés étrangères !
         df_compagnies.to_sql('airlines', engine, if_exists='append', index=False)
         print("1/4 - Table 'airlines' peuplée avec succès.")
         

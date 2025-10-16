@@ -1,4 +1,4 @@
-from src.data_loader import charger_aeroports, charger_vols, charger_compagnies, charger_avions
+from src.data_loader import charger_aeroports, charger_vols, charger_compagnies, charger_avions, charger_meteo
 from src.analysis import (analyses_comptages_simples, analyses_classements, analyses_comptages_suite, 
                          analyse_par_compagnie, analyses_filtrage_et_tri, 
                          couverture_compagnies, destinations_exclusives, 
@@ -16,6 +16,7 @@ def run_analysis_mission():
     df_vols = charger_vols()
     df_compagnies = charger_compagnies()
     df_avions = charger_avions()
+    df_meteo = charger_meteo()
 
     print("\n--- Début de l'analyse ---")
 
